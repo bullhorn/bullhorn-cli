@@ -4,7 +4,7 @@
 
 ## Installation
 
-> `npm install -g bullhorn-cli`
+> `npm install -g @bullhorn/bullhorn-cli`
 
 ## Usage
 ```
@@ -23,6 +23,7 @@ Commands:
 
   extract   Extract an extension from the extension config JSON file
   upload    Upload an extension after extracting
+  generate [options] [entity]  generate data model from Bullhorn REST metadata
 ```
 
 ## Local Development
