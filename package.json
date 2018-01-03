@@ -1,6 +1,6 @@
 {
   "name": "bullhorn-cli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "preferGlobal": true,
   "bin": {
@@ -29,5 +29,8 @@
     "inquirer": "^4.0.0",
     "jsonfile": "^4.0.0",
     "node-fetch": "^1.7.3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
