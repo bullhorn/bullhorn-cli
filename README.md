@@ -4,7 +4,7 @@
 
 ## Installation
 
-> `npm install -g bullhorn-cli`
+> `npm install -g @bullhorn/bullhorn-cli`
 
 ## Usage
 ```
