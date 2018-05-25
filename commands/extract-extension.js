@@ -50,7 +50,29 @@ const extract = () => {
           if (file.endsWith('.js')) {
             console.log(chalk.blue(`    ${file}`));
             let interactionConfig = require(path.join(process.cwd(), file)).default;
-            interactionConfig.script = cleanUpScriptString(interactionConfig.script.toString());
+
+      if(typeof interactionConfig === 'function') {
+        let interactionMethods = extend({}, new interactionConfig());
+
+        for(let property in interactionConfig.prototype) {
+          interactionMethods[property] = interactionConfig.prototype[property].toString();
+        }
+
+        let script = `function(API) {
+                var interaction = ${JSON.stringify(interactionMethods)};
+                
+                interaction.script(API);
+              }`;
+
+        interactionConfig = extend(interactionConfig, {
+          script: script
+        });
+
+        console.log(interactionConfig.script.toString())
+      }  else {
+        interactionConfig.script = cleanUpScriptString(interactionConfig.script.toString());
+      }
+
             if (!output.fieldInteractions[key]) {
               output.fieldInteractions[key] = [];
             }
