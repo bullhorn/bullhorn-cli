@@ -38,6 +38,9 @@ const extract = () => {
   if (configuration.pageInteractions) {
     output.pageInteractions = [];
   }
+  if (configuration.bots) {
+    output.bots = [];
+  }
 
   console.log(chalk.blue('Extracting extension points...'));
 
