@@ -76,6 +76,21 @@ const extract = () => {
     });
   }
 
+  if (configuration.bots) {
+    console.log(chalk.blue('  Extracting bot configurations...'));
+    configuration.bots.forEach(bot => {
+      let matches = glob.sync(bot);
+      matches.forEach(file => {
+        if (file.endsWith('.js')) {
+          console.log(chalk.blue(`    ${bot}`));
+          let botConfig = require(path.join(process.cwd(), bot)).default;
+          // todo: modify bot if needed
+          output.bots.push(botConfig);
+        }
+      });
+    });
+  }
+
   console.log(chalk.blue(`Extraction complete! File being written to config.json`));
 
   let file = `./output/extension.json`;
