@@ -31,17 +31,22 @@
   "dependencies": {
     "axios": "^0.17.1",
     "chalk": "^2.3.0",
-    "commander": "^2.12.0",
+    "cli-table": "^0.3.1",
+    "commander": "^2.15.1",
+    "console.table": "^0.10.0",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
     "inquirer": "^4.0.0",
     "jsonfile": "^4.0.0",
+    "load-json-file": "^5.0.0",
     "loggy": "^1.0.2",
     "mkdirp": "^0.5.1",
     "node-fetch": "^1.7.3",
     "p-lazy": "^1.0.0",
     "p-series": "^1.0.0",
-    "rc": "^1.2.2"
+    "rc": "^1.2.2",
+    "trash": "^4.3.0",
+    "write-json-file": "^2.3.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

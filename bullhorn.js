@@ -1,44 +1,118 @@
 #!/usr/bin/env node
-
+const chalk = require('chalk');
 const program = require('commander');
 const { prompt } = require('inquirer');
+const loadJsonFile = require('load-json-file');
+const { login } = require('./commands/auth-login');
+const { setconfig } = require('./commands/config-set');
 const { extract } = require('./commands/extract-extension');
 const { upload } = require('./commands/upload-extension');
+const { list } = require('./commands/list-extension');
 const { generate } = require('./commands/create-typings');
-
+const { isAuthorized } = require('./lib/auth');
+const { version } = require('./package.json');
+const AUTH_QUESTIONS = require('./questions/auth-login.json');
 const UPLOAD_QUESTIONS = require('./questions/upload-extension.json');
 
 program
-  .version('0.0.1')
-  .description('Bullhorn CLI')
+    .version(version)
+    .description('Bullhorn CLI');
 
-program
+const auth = program.command('auth <action>').description('Authorize cli with Bullhorn');
+auth
+  .command('login')
+  .description('Authorize cli with Bullhorn')
+  .action(() => {
+      prompt(AUTH_QUESTIONS).then((answers) => login(answers));
+  });
+
+const config = program.command('config <action>').description('Authorize cli with Bullhorn');
+config
+  .command('set <property> <value>')
+  .description('generate data model from Bullhorn REST metadata')
+  .action((...args) => {
+    setconfig(...args);
+  });
+
+const extensions = program.command('extensions <action>').description('commands to manage extensions');
+
+extensions
   .command('extract')
   .description('Extract an extension from the extension config JSON file')
   .action(() => extract());
 
-program
+extensions
+  .command('list')
+  .description('list installed extensions')
+  .action(() => {
+    isAuthorized()
+      .then((credentials) => list(credentials))
+      .catch(() => {
+        console.log(chalk.red('Please make sure you have run "bullhorn auth login" first.'));
+      });
+  });
+
+extensions
   .command('upload')
   .description('Upload an extension after extracting')
   .action(() => {
     prompt(UPLOAD_QUESTIONS).then((answers) => upload(answers));
   });
 
-program
+const typings = program.command('typings <action>').description('commands to generate typings file');
+
+typings
   .command('generate [entity]')
   .description('generate data model from Bullhorn REST metadata')
   .option('-e, --environment <environment>', 'specify the environment to use. (default: https://universal.bullhornstaffing.com)')
   .option('-d, --directory <directory>', 'specify the directory to output files. (default: ./typings)')
-  .option('-u, --username <username>', 'specify the username for authentication. (Required)')
-  .option('-p, --password <password>', 'specify the password for authentication. (Required)')
   .action((...args) => {
-    generate(...args);
+    isAuthorized()
+      .then((credentials) =>  generate(credentials, ...args))
+      .catch(() => {
+        console.log(chalk.red('Please make sure you have run "bullhorn auth login" first.'));
+      });
   });
 
-// Assert that a VALID command is provided
-if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
-  program.outputHelp();
-  process.exit();
+const env = process.argv.splice(2,1);
+switch (env[0]) {
+  case 'auth':
+    if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+      auth.outputHelp();
+      process.exit();
+    }
+    auth.parse(process.argv);
+    break;
+  case 'config':
+  case 'conf':
+    if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+      config.outputHelp();
+      process.exit();
+    }
+    config.parse(process.argv);
+    break;
+  case 'extensions':
+  case 'ext':
+    if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+      extensions.outputHelp();
+      process.exit();
+    }
+    extensions.parse(process.argv);
+    break;
+  case 'typings':
+  case 't':
+    if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+      typings.outputHelp();
+      process.exit();
+    }
+    typings.parse(process.argv);
+    break;
+  default:
+    try {
+      program.parse(process.argv);
+    } catch (err) {
+      program.outputHelp();
+      process.exit();
+    }
+    break;
 }
-
-program.parse(process.argv)
