@@ -62,11 +62,14 @@ const getMetaData = (item, access) => {
                 dependencies: new Set(),
                 dynamic: false
             };
+            let hasCustomObjects = false;
             if (meta.entity.indexOf('CustomObject') >= 0) {
                 data.dynamic = true;
             } else {
                 for (let field of meta.fields) {
-                    if (['id'].indexOf(field.name) < 0) {
+                    if (field.name.indexOf('customObject') === 0) {
+                      hasCustomObjects = true;
+                    } else if (['id'].indexOf(field.name) < 0) {
                         switch (field.dataType || '') {
                             case 'Integer':
                             case 'Double':
@@ -121,6 +124,16 @@ const getMetaData = (item, access) => {
                                 break;
                         }
                     }
+                }
+                if(hasCustomObjects) {
+                  let entity = meta.entity.replace(/[0-9]/g, '');
+                  entity = ['Candidate', 'ClientContact', 'Lead'].indexOf(entity) < 0 ? entity : 'Person';
+                  for ( let i=1; i<=10; i++){
+                    data.properties.push({
+                      name: `customObject${i}s`,
+                      type: `${entity}CustomObjectInstance${i}[]`
+                    });
+                  }
                 }
             }
             return data;
