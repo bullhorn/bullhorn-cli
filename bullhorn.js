@@ -4,7 +4,7 @@ const program = require('commander');
 const { prompt } = require('inquirer');
 const loadJsonFile = require('load-json-file');
 const { login } = require('./commands/auth-login');
-const { setconfig } = require('./commands/config-set');
+const { setconfig, getconfig } = require('./commands/config-set');
 const { extract } = require('./commands/extract-extension');
 const { upload } = require('./commands/upload-extension');
 const { list } = require('./commands/list-extension');
@@ -29,9 +29,16 @@ auth
 const config = program.command('config <action>').description('Authorize cli with Bullhorn');
 config
   .command('set <property> <value>')
-  .description('generate data model from Bullhorn REST metadata')
+  .description('set a configuration property')
   .action((...args) => {
     setconfig(...args);
+  });
+
+config
+  .command('get <property>')
+  .description('set a configuration property')
+  .action((...args) => {
+    getconfig(...args);
   });
 
 const extensions = program.command('extensions <action>').description('commands to manage extensions');
