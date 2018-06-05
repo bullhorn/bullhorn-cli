@@ -1,13 +1,4 @@
-[{
-    "type": "input",
-    "name": "restUrl",
-    "message": "Enter restUrl .."
-  },
-  {
-    "type": "input",
-    "name": "BhRestToken",
-    "message": "Enter BhRestToken .."
-  },
+[
   {
     "type": "confirm",
     "name": "forceInstall",

@@ -38,6 +38,9 @@ const extract = () => {
   if (configuration.pageInteractions) {
     output.pageInteractions = [];
   }
+  if (configuration.bots) {
+    output.bots = [];
+  }
 
   console.log(chalk.blue('Extracting extension points...'));
 
@@ -71,6 +74,21 @@ const extract = () => {
           let interactionConfig = require(path.join(process.cwd(), interaction)).default;
           interactionConfig.script = cleanUpScriptString(interactionConfig.script.toString());
           output.pageInteractions.push(interactionConfig);
+        }
+      });
+    });
+  }
+
+  if (configuration.bots) {
+    console.log(chalk.blue('  Extracting bot configurations...'));
+    configuration.bots.forEach(bot => {
+      let matches = glob.sync(bot);
+      matches.forEach(file => {
+        if (file.endsWith('.js')) {
+          console.log(chalk.blue(`    ${bot}`));
+          let botConfig = require(path.join(process.cwd(), bot)).default;
+          // todo: modify bot if needed
+          output.bots.push(botConfig);
         }
       });
     });

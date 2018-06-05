@@ -2,28 +2,16 @@ const series = require('p-series');
 const Lazy = require('p-lazy');
 const axios = require('axios');
 const fs = require('fs');
-const mkdirp = require('mkdirp');
 const Logger = require('loggy');
 const rc = require('rc');
 
 const { CORE_DEFINITION_TEMPLATE } = require('../templates/typings');
 
-const generate = (entity = 'all', options = {}) => {
+const generate = (credentials, entity = 'all', options = {}) => {
+    let rest = credentials.sessions.find(s => s.name === 'rest').value;
     let config = rc('bullhorn', options);
-    let env = config.environment || 'https://universal.bullhornstaffing.com';
     let dir = config.directory || './typings';
-    mkdirp(dir);
-    Logger.log(`authenticating against... ${env}`);
-    let access = null;
-    //axios.defaults.withCredentials = true;
-
-    return axios(`${env}/universal-login/session/login?username=${config.username}&password=${config.password}`)
-        .then((res) => res.data)
-        .then((json) => {
-            access = json.sessions.find((s) => s.name === 'rest').value;
-            Logger.log(`retrieving available entities...`);
-            return axios(`${access.endpoint}/meta?&BhRestToken=${access.token}`);
-        })
+    return axios(`${rest.endpoint}/meta?&BhRestToken=${rest.token}`)
         .then((res) => res.data)
         .then((list) => {
             let promises = [];
@@ -36,7 +24,7 @@ const generate = (entity = 'all', options = {}) => {
             for (let item of list) {
                 promises.push(
                     () => new Lazy((resolve, reject) => {
-                        return getMetaData(item, access)
+                        return getMetaData(item, rest)
                             .then(resolve)
                             .catch(reject);
                     })
@@ -74,11 +62,14 @@ const getMetaData = (item, access) => {
                 dependencies: new Set(),
                 dynamic: false
             };
+            let hasCustomObjects = false;
             if (meta.entity.indexOf('CustomObject') >= 0) {
                 data.dynamic = true;
             } else {
                 for (let field of meta.fields) {
-                    if (['id'].indexOf(field.name) < 0) {
+                    if (field.name.indexOf('customObject') === 0) {
+                      hasCustomObjects = true;
+                    } else if (['id'].indexOf(field.name) < 0) {
                         switch (field.dataType || '') {
                             case 'Integer':
                             case 'Double':
@@ -133,6 +124,16 @@ const getMetaData = (item, access) => {
                                 break;
                         }
                     }
+                }
+                if(hasCustomObjects) {
+                  let entity = meta.entity.replace(/[0-9]/g, '');
+                  entity = ['Candidate', 'ClientContact', 'Lead'].indexOf(entity) < 0 ? entity : 'Person';
+                  for ( let i=1; i<=10; i++){
+                    data.properties.push({
+                      name: `customObject${i}s`,
+                      type: `${entity}CustomObjectInstance${i}[]`
+                    });
+                  }
                 }
             }
             return data;
