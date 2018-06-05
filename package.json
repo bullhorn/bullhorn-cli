@@ -1,6 +1,6 @@
 {
   "name": "@bullhorn/bullhorn-cli",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "",
   "preferGlobal": true,
   "bin": {
@@ -14,7 +14,7 @@
   "author": "Joshua Godi <joshuagodi@gmail.com>",
   "contributors": [
     {
-      "name": "Brian Kimballf",
+      "name": "Brian Kimball",
       "email": "bvkimball@gmail.com"
     }
   ],
@@ -31,7 +31,6 @@
   "dependencies": {
     "axios": "^0.17.1",
     "chalk": "^2.3.0",
-    "cli-table": "^0.3.1",
     "commander": "^2.15.1",
     "console.table": "^0.10.0",
     "glob": "^7.1.2",
