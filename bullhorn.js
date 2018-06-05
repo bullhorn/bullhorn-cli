@@ -22,8 +22,15 @@ const auth = program.command('auth <action>').description('Authorize cli with Bu
 auth
   .command('login')
   .description('Authorize cli with Bullhorn')
-  .action(() => {
+  .option('-u, --username <username>', 'specify the username to use to authenticate')
+  .option('-p, --password <password>', 'specify the password to use to authenticate')
+  .action((options) => {
+    if(options.username && options.password) {
+      const { username, password } = options;
+      login({username, password});
+    } else {
       prompt(AUTH_QUESTIONS).then((answers) => login(answers));
+    }
   });
 
 const config = program.command('config <action>').description('Authorize cli with Bullhorn');

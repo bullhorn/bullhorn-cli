@@ -5,8 +5,9 @@ const login = (credentials) => {
     console.log(chalk.blue(`Authorizing...`));
     // Push
     return checkLogin(credentials)
-      .then(() => {
-          console.log(chalk.green(`Authorization Complete`));
+      .then((identity) => {
+        let rest = credentials.sessions.find(s => s.name === 'rest').value;
+        console.log(chalk.green(`Authorization Complete: ${rest.token}`));
       })
       .catch(error => {
         console.log(chalk.red(error));
