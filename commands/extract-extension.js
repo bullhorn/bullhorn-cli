@@ -8,7 +8,7 @@ function cleanUpScriptString(script) {
   return script.replace(/function\s?\((\w+[,]?\s?)+\)\s?{((.|\n)*(?=}))}/gm, '$2').trim();
 }
 
-const extract = (GIT_COMMIT) => {
+const extract = (git_commit) => {
   // Check for "extension.json" file
   if (!fs.existsSync('./extension.json')) {
     console.log(chalk.red('Cannot find "extension.json" at the root level...'));
@@ -27,8 +27,12 @@ const extract = (GIT_COMMIT) => {
   }
 
   // Create output object
+  console.log(`git commit as of extract-ext line 30 is ${git_commit}`);
+  console.log(`this.git commit as of extract-ext line 30 is ${this.git_commit}`);
+
   let output = {
-    name: `${configuration.name}-${GIT_COMMIT.substr(0, 8)}`
+    name: `${configuration.name}-${git_commit}`
+    //.substr(0, 8)
   };
 
   // If configuration has these, then make objects on output
