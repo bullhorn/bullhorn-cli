@@ -27,6 +27,7 @@ const extract = (git_commit) => {
   }
 
   // Create output object
+  console.log('test');
   console.log(`git commit as of extract-ext line 30 is ${git_commit}`);
   console.log(`this.git commit as of extract-ext line 30 is ${this.git_commit}`);
 
