@@ -53,7 +53,10 @@ const extensions = program.command('extensions <action>').description('commands 
 extensions
   .command('extract')
   .description('Extract an extension from the extension config JSON file')
-  .action((GIT_COMMIT) => extract(GIT_COMMIT));
+  .option('-c, --commit<commit>', 'git commit')
+  .action((commit) => {
+    const {git_commit} = commit;
+    extract({git_commit});
 
 extensions
   .command('list')
