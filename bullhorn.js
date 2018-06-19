@@ -7,6 +7,8 @@ const { login } = require('./commands/auth-login');
 const { setconfig, getconfig } = require('./commands/config-set');
 const { extract } = require('./commands/extract-extension');
 const { upload } = require('./commands/upload-extension');
+const { uninstall } = require('./commands/uninstall-extension');
+const { lookup } = require('./commands/entity-cmds');
 const { list } = require('./commands/list-extension');
 const { generate } = require('./commands/create-typings');
 const { isAuthorized } = require('./lib/auth');
@@ -68,9 +70,52 @@ extensions
 
 extensions
   .command('upload')
+  .alias('install')
   .description('Upload an extension after extracting')
-  .action(() => {
-    prompt(UPLOAD_QUESTIONS).then((answers) => upload(answers));
+  .option('-f, --force', 'force upload')
+  .option('-s, --skip', 'skip confirmation')
+  .action((options) => {
+    isAuthorized()
+      .then((credentials) => {
+        if(options && (options.force !== undefined || options.skip)) {
+          const { force, skip } = options;
+          upload(credentials, { force, skip });
+        } else {
+          prompt(UPLOAD_QUESTIONS).then((answers) => upload(credentials, answers));
+        }
+      })
+      .catch(() => {
+        console.log(chalk.red('Please make sure you have run "bullhorn auth login" first.'));
+      });
+  });
+
+extensions
+  .command('uninstall <id>')
+  .option('-s, --skip', 'skip confirmation')
+  .description('Uninstall an extension')
+  .action((...args) => {
+    isAuthorized()
+      .then((credentials) => {
+        uninstall(credentials, ...args);
+      })
+      .catch(() => {
+        console.log(chalk.red('Please make sure you have run "bullhorn auth login" first.'));
+      });
+  });
+
+
+const entity = program.command('entity <action>').description('commands to explore data');
+
+entity
+  .command('lookup <entity>')
+  .description('Lookup entities in Bullhorn')
+  .option('-f, --filter <filter>', 'specify a text filter')
+  .action((...args) => {
+    isAuthorized()
+    .then((credentials) => lookup(credentials, ...args))
+    .catch(() => {
+      console.log(chalk.red('Please make sure you have run "bullhorn auth login" first.'));
+    });
   });
 
 const typings = program.command('typings <action>').description('commands to generate typings file');
@@ -112,6 +157,13 @@ switch (env[0]) {
       process.exit();
     }
     extensions.parse(process.argv);
+    break;
+  case 'entity':
+    if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+      entity.outputHelp();
+      process.exit();
+    }
+    entity.parse(process.argv);
     break;
   case 'typings':
   case 't':
