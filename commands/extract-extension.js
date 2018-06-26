@@ -28,7 +28,8 @@ const extract = () => {
 
   // Create output object
   let output = {
-    name: configuration.name
+    name: configuration.name,
+    description: configuration.description,
   };
 
   // If configuration has these, then make objects on output
@@ -103,13 +104,13 @@ const extract = () => {
   }
 
   jsonfile.writeFileSync(file, output, {
-    spaces: 2
+    spaces: 2,
   });
 
   console.log(chalk.blue('Write file complete! Enjoy!'));
-}
+};
 
 // Export all methods
 module.exports = {
-  extract
+  extract,
 };
