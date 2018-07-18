@@ -1,6 +1,6 @@
 const handlebars = require('handlebars');
 
-const core = `// Generated with bullhorn-typedefs
+const core = `// Generated with @bullhorn/bullhorn-cli
 
 // Utility Classes
 export class EntityTypes {
@@ -21,6 +21,13 @@ export class EntityTypes {
 export type Scalar = number | string | string[] | Date;
 export type Strings = string | string[];
 
+export type ToMany<T> = ToManyRef<T> | T[];
+
+export interface ToManyRef<T> {
+  total: number;
+  data: T[];
+}
+
 export interface Address {
     address1?: string;
     address2?: string;
@@ -39,12 +46,15 @@ export interface {{type}} {
     [propName: string]: any;
     {{/if}}
     {{#properties}}
-    {{name}}?: {{type}};
+    {{name}}?: {{encode type}};
     {{/properties}}
 }
 {{/types}}
 `;
 
+handlebars.registerHelper('encode',function(inputData){
+  return new handlebars.SafeString(inputData);
+});
 const CORE_DEFINITION_TEMPLATE = handlebars.compile(core);
 
 module.exports = {

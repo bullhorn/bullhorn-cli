@@ -111,7 +111,7 @@ const getMetaData = (item, access) => {
                                 if (field.type === 'TO_MANY') {
                                     data.properties.push({
                                         name: field.name,
-                                        type: `${field.associatedEntity.entity}[]`
+                                        type: `ToMany<${field.associatedEntity.entity}>`
                                     });
                                     data.dependencies.add(field.associatedEntity.entity);
                                 } else if (field.type === 'TO_ONE') {
