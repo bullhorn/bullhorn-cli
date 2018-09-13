@@ -5,7 +5,7 @@ const glob = require('glob');
 const jsonfile = require('jsonfile');
 
 function cleanUpScriptString(script) {
-  return script.replace(/function\s?\((\w+,?\s?)+\)\s?{((.|\n)*})(.|\n)*}(.|\n)*/gm, '$2').trim();
+  return script.replace(/function\s?\((\w+,?\s?)+\)\s?{(\s+)((.|\s)*)}/gm, '$3').trim();
 }
 
 const extract = () => {
