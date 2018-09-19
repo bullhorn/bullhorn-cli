@@ -1,8 +1,14 @@
 [
   {
     "type": "confirm",
-    "name": "forceInstall",
+    "name": "force",
     "message": "Use forceInstall? ..",
+    "default": false
+  },
+  {
+    "type": "confirm",
+    "name": "skip",
+    "message": "Skip confirmation? ..",
     "default": false
   }
 ]

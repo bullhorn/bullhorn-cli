@@ -72,8 +72,8 @@ extensions
   .command('upload')
   .alias('install')
   .description('Upload an extension after extracting')
-  .option('-f, --force', 'force upload')
-  .option('-s, --skip', 'skip confirmation')
+  .option('-f, --force <force>', 'force upload')
+  .option('-s, --skip <skip>', 'skip confirmation')
   .action((options) => {
     isAuthorized()
       .then((credentials) => {
