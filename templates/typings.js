@@ -17,6 +17,8 @@ export class EntityTypes {
     }
 }
 
+export type EntityTypesSubset<T extends keyof typeof EntityTypes> = keyof Pick<typeof EntityTypes, T>;
+
 // Interfaces
 export type Scalar = number | string | string[] | Date;
 export type Strings = string | string[];
