@@ -5,7 +5,7 @@ const core = `// Generated with @bullhorn/bullhorn-cli
 // Utility Classes
 export class EntityTypes {
 {{#types}}
-    static {{type}}: string = '{{type}}';
+    static {{type}}: '{{type}}' = '{{type}}';
 {{/types}}
 
     static isSearchable(entity: string): boolean {
@@ -17,7 +17,8 @@ export class EntityTypes {
     }
 }
 
-export type EntityTypesSubset<T extends keyof typeof EntityTypes> = keyof Pick<typeof EntityTypes, T>;
+export type EntityName = Exclude<keyof typeof EntityTypes, 'prototype'>;
+export type EntityNameSubset<T extends EntityName> = Extract<EntityName, T>;
 
 // Interfaces
 export type Scalar = number | string | string[] | Date;
