@@ -1,8 +1,12 @@
 {
   "name": "@bullhorn/bullhorn-cli",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "",
   "preferGlobal": true,
+  "scripts": {
+    "release": "standard-version",
+    "postrelease": "git push --follow-tags origin master; npm publish"
+  },
   "bin": {
     "bullhorn": "./bullhorn.js",
     "bh": "./bullhorn.js"
@@ -44,6 +48,7 @@
     "p-lazy": "^1.0.0",
     "p-series": "^1.0.0",
     "rc": "^1.2.2",
+    "standard-version": "^5.0.2",
     "trash": "^4.3.0",
     "write-json-file": "^2.3.0"
   },
