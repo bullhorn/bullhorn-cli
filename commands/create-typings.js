@@ -18,8 +18,6 @@ const generate = (credentials, entity = 'all', options = {}) => {
             Logger.log(`retrieving metadata for each entity...`);
             if (entity !== 'all') {
                 list = list.filter(i => entity.split(',').indexOf(i.entity) >= 0);
-            } else {
-                Logger.warn(`(this may take a while)`);
             }
             for (let item of list) {
                 promises.push(
@@ -36,6 +34,9 @@ const generate = (credentials, entity = 'all', options = {}) => {
                     Logger.log(`writing templates...`);
                     let deletables = types.filter((i) => i && i.properties.find(p => p.name === 'isDeleted'));
                     let tmp = CORE_DEFINITION_TEMPLATE({ types: types, deletables: deletables });
+                    if (!fs.existsSync(dir)) {
+                      fs.mkdirSync(dir, { recursive: true })
+                    }
                     fs.writeFile(`${dir}/index.ts`, tmp, (err) => {
                         if (err) {
                             Logger.error(err.message);
@@ -49,13 +50,13 @@ const generate = (credentials, entity = 'all', options = {}) => {
         }).catch((err) => {
             Logger.error('✗ An error occurred', err);
         });
-}
+};
 
 const getMetaData = (item, access) => {
     return axios(`${item.metaUrl}&meta=full&BhRestToken=${access.token}`)
         .then((res) => res.data)
         .then((meta) => {
-            //Logger.spin(`processing entity meta... ${meta.entity}`);
+            Logger.log(`${meta.entity}`);
             let data = {
                 type: meta.entity,
                 properties: [],
@@ -147,7 +148,7 @@ const getMetaData = (item, access) => {
                 dynamic: true
             };
         });
-}
+};
 
 
 // Export all methods
