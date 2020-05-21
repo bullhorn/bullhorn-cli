@@ -1,4 +1,4 @@
-# [![BULLHORN CLI](header.gif)](https://bullhon.github.io)
+# [![BULLHORN CLI](header.gif)](https://bullhorn.github.io)
 
 > Command line interface for Bullhorn and Bullhorn Extensions
 
