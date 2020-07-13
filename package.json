@@ -48,7 +48,7 @@
     "p-lazy": "^1.0.0",
     "p-series": "^1.0.0",
     "rc": "^1.2.2",
-    "standard-version": "^5.0.2",
+    "standard-version": "^8.0.1",
     "trash": "^4.3.0",
     "write-json-file": "^2.3.0"
   },
