@@ -71,8 +71,8 @@ const extract = () => {
       let matches = glob.sync(interaction);
       matches.forEach(file => {
         if (file.endsWith('.js')) {
-          console.log(chalk.blue(`    ${interaction}`));
-          let interactionConfig = require(path.join(process.cwd(), interaction)).default;
+          console.log(chalk.blue(`    ${file}`));
+          let interactionConfig = require(path.join(process.cwd(), file)).default;
           interactionConfig.script = cleanUpScriptString(interactionConfig.script.toString());
           output.pageInteractions.push(interactionConfig);
         }
